@@ -88,4 +88,21 @@ describe('API - Usuários', () => {
       });
     });
   });
+
+  it('CT04 - Deve validar os campos obrigatórios ao cadastrar com o corpo vazio', () => {
+    cy.request({
+      method: 'POST',
+      url: `${apiUrl()}/usuarios`,
+      body: {},
+      failOnStatusCode: false,
+    }).then((resposta) => {
+      expect(resposta.status).to.eq(400);
+      expect(resposta.body).to.include({
+        nome: mensagens.validacaoApi.nomeObrigatorio,
+        email: mensagens.validacaoApi.emailObrigatorio,
+        password: mensagens.validacaoApi.passwordObrigatorio,
+        administrador: mensagens.validacaoApi.administradorObrigatorio,
+      });
+    });
+  });
 });
