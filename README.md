@@ -79,6 +79,12 @@ cypress/
 
 Todos os cenários criam sua própria massa de dados (via `@faker-js/faker`) e fazem a limpeza (teardown) via API ao final, para não deixar resíduo no ambiente público compartilhado do ServeRest.
 
+> **Nenhum spec depende de outro.** Os nomes dos arquivos não seguem numeração de ordem
+> de execução de propósito: cada teste cria e limpa sua própria massa de dados, podendo
+> rodar sozinho, fora de ordem ou em paralelo. Se quiser só uma ordem sugerida de leitura
+> (não de execução), sugerimos: `login` → `cadastro-usuario` → `lista-de-compras` (GUI) e
+> `usuarios` → `login` → `produtos-carrinhos` (API).
+
 ## CI
 
 O workflow `.github/workflows/cypress.yml` roda no GitHub Actions a cada push/PR na branch `main`:
