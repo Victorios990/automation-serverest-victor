@@ -9,6 +9,13 @@ documentadas no Swagger oficial** (`serverest.dev/swagger.json`).
 
 Projeto desenvolvido como desafio técnico de QA.
 
+## Relatórios
+
+Os relatórios finais do desafio estão em [`docs/`](./docs):
+
+- [`docs/Relatorio_1_Execucao_de_Testes.pdf`](./docs/Relatorio_1_Execucao_de_Testes.pdf) - execução dos testes, ambiente, evidências e defeitos encontrados.
+- [`docs/Relatorio_2_Tecnico_Automacao.pdf`](./docs/Relatorio_2_Tecnico_Automacao.pdf) - documentação técnica da automação (arquitetura, como executar, boas práticas).
+
 ## Stack
 
 - [Cypress](https://www.cypress.io/) (JavaScript)

@@ -9,3 +9,4 @@ allure-report/
 npm-debug.log*
 .DS_Store
 coverage/
+evidencias/
