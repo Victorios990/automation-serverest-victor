@@ -23,6 +23,26 @@ function criarAdminAutenticado() {
     });
 }
 
+/**
+ * Mesma ideia de criarAdminAutenticado, mas para um usuário comum (administrador: 'false'),
+ * usado para validar que rotas administrativas continuam bloqueadas mesmo com um token válido.
+ */
+function criarUsuarioComumAutenticado() {
+  const usuario = UsuarioFactory.gerarUsuario({ administrador: 'false' });
+
+  return cy
+    .request({ method: 'POST', url: `${apiUrl()}/usuarios`, body: usuario })
+    .then((cadastro) => {
+      return cy
+        .request({
+          method: 'POST',
+          url: `${apiUrl()}/login`,
+          body: { email: usuario.email, password: usuario.password },
+        })
+        .then((login) => ({ userId: cadastro.body._id, token: login.body.authorization }));
+    });
+}
+
 describe('API - Produtos e Carrinhos', () => {
   let usuarioParaLimpar;
   let produtoParaLimpar;
@@ -120,6 +140,26 @@ describe('API - Produtos e Carrinhos', () => {
             headers: { Authorization: token },
           });
         });
+      });
+    });
+  });
+
+  it('CT04 - Não deve permitir que um usuário não administrador cadastre produtos', () => {
+    criarUsuarioComumAutenticado().then(({ userId, token }) => {
+      usuarioParaLimpar = userId;
+      const produto = ProdutoFactory.gerarProduto();
+
+      cy.request({
+        method: 'POST',
+        url: `${apiUrl()}/produtos`,
+        body: produto,
+        headers: { Authorization: token },
+        failOnStatusCode: false,
+      }).then((resposta) => {
+        // Diferente do CT01 (sem token / 401), aqui o token é válido, mas o usuário
+        // não é administrador - a API responde 403, não 401.
+        expect(resposta.status).to.eq(403);
+        expect(resposta.body.message).to.eq(mensagens.erros.rotaParaAdministradores);
       });
     });
   });
