@@ -1,0 +1,9 @@
+{
+  "navHome": "[data-testid=\"home\"]",
+  "navCadastrarUsuarios": "[data-testid=\"cadastrar-usuarios\"]",
+  "navListarUsuarios": "[data-testid=\"listar-usuarios\"]",
+  "navCadastrarProdutos": "[data-testid=\"cadastrar-produtos\"]",
+  "navListarProdutos": "[data-testid=\"listar-produtos\"]",
+  "navRelatorios": "[data-testid=\"link-relatorios\"]",
+  "botaoLogout": "[data-testid=\"logout\"]"
+}
