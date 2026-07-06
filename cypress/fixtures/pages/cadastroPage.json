@@ -1,0 +1,9 @@
+{
+  "nomeInput": "[data-testid=\"nome\"]",
+  "emailInput": "[data-testid=\"email\"]",
+  "passwordInput": "[data-testid=\"password\"]",
+  "administradorCheckbox": "[data-testid=\"checkbox\"]",
+  "botaoCadastrar": "[data-testid=\"cadastrar\"]",
+  "linkEntrar": "[data-testid=\"entrar\"]",
+  "alertaErro": ".alert"
+}
