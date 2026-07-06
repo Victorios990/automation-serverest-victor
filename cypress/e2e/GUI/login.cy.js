@@ -8,8 +8,8 @@ describe('Login', () => {
     cy.fixture('dados/credenciaisInvalidas').as('credenciaisInvalidas');
   });
 
-  context('Autenticação', () => {
-    it('CT01 - Deve realizar login com sucesso utilizando um usuário previamente cadastrado', function () {
+  context('Autenticacao', () => {
+    it('CT01 - Deve realizar login com sucesso utilizando um usuario previamente cadastrado', function () {
       const usuario = UsuarioFactory.gerarUsuario();
 
       // Dado que existe um usuário previamente cadastrado (setup via API, independente da UI)
@@ -27,7 +27,7 @@ describe('Login', () => {
       });
     });
 
-    it('CT02 - Não deve permitir login com credenciais inválidas', function () {
+    it('CT02 - Nao deve permitir login com credenciais invalidas', function () {
       // Dado que estou na tela de login
       LoginActions.visitar();
 
@@ -43,7 +43,7 @@ describe('Login', () => {
       cy.url().should('include', '/login');
     });
 
-    it('CT03 - Deve permitir fechar o alerta de erro de login inválido', function () {
+    it('CT03 - Deve permitir fechar o alerta de erro de login invalido', function () {
       // Dado que uma tentativa de login inválida gerou um alerta de erro
       const { email, password } = this.credenciaisInvalidas;
       LoginActions.visitar();
@@ -57,7 +57,7 @@ describe('Login', () => {
       cy.get(this.mapaLogin.alertaErro).should('not.exist');
     });
 
-    it('CT04 - Deve fazer logout e bloquear o acesso à home sem autenticação', function () {
+    it('CT04 - Deve fazer logout e bloquear o acesso a home sem autenticacao', function () {
       const usuario = UsuarioFactory.gerarUsuario();
 
       // Dado que estou autenticado na home
@@ -88,9 +88,9 @@ describe('Login', () => {
   // perfil da conta: um usuário comum vai para a loja (/home), um administrador vai para
   // um painel próprio (/admin/home). Descoberto explorando o app - vale a pena um contexto
   // dedicado para deixar essa diferença de comportamento explícita e testada dos dois lados.
-  context('Navegação pós-login por perfil', () => {
-    context('Usuário comum', () => {
-      it('CT05 - Deve exibir a navegação da loja, sem itens de administrador', function () {
+  context('Navegacao pos-login por perfil', () => {
+    context('Usuario comum', () => {
+      it('CT05 - Deve exibir a navegacao da loja, sem itens de administrador', function () {
         const usuario = UsuarioFactory.gerarUsuario({ administrador: 'false' });
 
         cy.criarUsuarioViaApi(usuario).then((resposta) => {
@@ -119,7 +119,7 @@ describe('Login', () => {
     });
 
     context('Administrador', () => {
-      it('CT06 - Deve exibir a navegação do painel administrativo, sem itens de shopper', function () {
+      it('CT06 - Deve exibir a navegacao do painel administrativo, sem itens de shopper', function () {
         const admin = UsuarioFactory.gerarUsuario({ administrador: 'true' });
 
         cy.criarUsuarioViaApi(admin).then((resposta) => {

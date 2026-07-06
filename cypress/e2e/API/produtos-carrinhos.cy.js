@@ -64,7 +64,7 @@ describe('API - Produtos e Carrinhos', () => {
     }
   });
 
-  it('CT01 - Não deve permitir criar um produto sem um token de autenticação', () => {
+  it('CT01 - Nao deve permitir criar um produto sem um token de autenticacao', () => {
     const produto = ProdutoFactory.gerarProduto();
 
     cy.request({
@@ -144,7 +144,7 @@ describe('API - Produtos e Carrinhos', () => {
     });
   });
 
-  it('CT04 - Não deve permitir que um usuário não administrador cadastre produtos', () => {
+  it('CT04 - Nao deve permitir que um usuario nao administrador cadastre produtos', () => {
     criarUsuarioComumAutenticado().then(({ userId, token }) => {
       usuarioParaLimpar = userId;
       const produto = ProdutoFactory.gerarProduto();
@@ -253,7 +253,7 @@ describe('API - Produtos e Carrinhos', () => {
     });
   });
 
-  it('CT08 - Deve listar os carrinhos cadastrados filtrando pelo usuário', () => {
+  it('CT08 - Deve listar os carrinhos cadastrados filtrando pelo usuario', () => {
     criarAdminAutenticado().then(({ userId, token }) => {
       usuarioParaLimpar = userId;
       const produto = ProdutoFactory.gerarProduto({ preco: 50, quantidade: 5 });

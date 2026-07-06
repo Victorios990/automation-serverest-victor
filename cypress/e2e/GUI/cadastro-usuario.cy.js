@@ -1,12 +1,12 @@
 import { mensagens, UsuarioFactory, CadastroActions } from '../../support/imports';
 
-describe('Cadastro de Usuário', () => {
+describe('Cadastro de Usuario', () => {
   beforeEach(function () {
     cy.fixture('pages/cadastroPage').as('mapaCadastro');
     cy.fixture('pages/homePage').as('mapaHome');
   });
 
-  it('CT01 - Deve cadastrar um novo usuário com sucesso e redirecionar para a home', function () {
+  it('CT01 - Deve cadastrar um novo usuario com sucesso e redirecionar para a home', function () {
     const usuario = UsuarioFactory.gerarUsuario();
     cy.registrarUsuarioParaLimpeza(usuario);
 
@@ -22,7 +22,7 @@ describe('Cadastro de Usuário', () => {
     cy.get(this.mapaHome.contadorCarrinho).should('exist');
   });
 
-  it('CT02 - Não deve permitir o cadastro com um e-mail já utilizado', function () {
+  it('CT02 - Nao deve permitir o cadastro com um e-mail ja utilizado', function () {
     const usuario = UsuarioFactory.gerarUsuario();
     cy.registrarUsuarioParaLimpeza(usuario);
 
@@ -41,7 +41,7 @@ describe('Cadastro de Usuário', () => {
     cy.url().should('include', '/cadastrarusuarios');
   });
 
-  it('CT03 - Deve validar os campos obrigatórios ao submeter o formulário vazio', function () {
+  it('CT03 - Deve validar os campos obrigatorios ao submeter o formulario vazio', function () {
     // Dado que estou na tela de cadastro, com o formulário vazio
     CadastroActions.visitar();
 
@@ -64,7 +64,7 @@ describe('Cadastro de Usuário', () => {
     cy.url().should('include', '/cadastrarusuarios');
   });
 
-  it('CT04 - Deve cadastrar um usuário comum, sem marcar a opção de administrador', function () {
+  it('CT04 - Deve cadastrar um usuario comum, sem marcar a opcao de administrador', function () {
     const usuario = UsuarioFactory.gerarUsuario({ administrador: 'false' });
     cy.registrarUsuarioParaLimpeza(usuario);
 
@@ -83,7 +83,7 @@ describe('Cadastro de Usuário', () => {
     });
   });
 
-  it('CT05 - Deve cadastrar um usuário administrador ao marcar a opção correspondente', function () {
+  it('CT05 - Deve cadastrar um usuario administrador ao marcar a opcao correspondente', function () {
     const usuario = UsuarioFactory.gerarUsuario({ administrador: 'true' });
     cy.registrarUsuarioParaLimpeza(usuario);
 
