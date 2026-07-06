@@ -1,0 +1,56 @@
+name: Cypress Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint e formatação
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npx prettier --check .
+
+  e2e-gui:
+    name: Testes E2E (GUI)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Executa specs de GUI
+        uses: cypress-io/github-action@v6
+        with:
+          spec: cypress/e2e/GUI/**/*.cy.js
+      - name: Upload de screenshots (em caso de falha)
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-gui
+          path: cypress/screenshots
+          if-no-files-found: ignore
+
+  api:
+    name: Testes de API
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Executa specs de API
+        uses: cypress-io/github-action@v6
+        with:
+          spec: cypress/e2e/API/**/*.cy.js
+      - name: Upload de screenshots (em caso de falha)
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-api
+          path: cypress/screenshots
+          if-no-files-found: ignore

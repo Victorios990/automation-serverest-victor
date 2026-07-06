@@ -56,8 +56,30 @@ cypress/
 
 ## Suíte de testes
 
-_Será detalhada conforme as etapas forem implementadas._
+### E2E - GUI (`cypress/e2e/GUI`)
+
+| Spec                     | Cenários                                                                                                 |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `cadastro-usuario.cy.js` | Cadastro de usuário com sucesso (redireciona para a home) e bloqueio de cadastro com e-mail já utilizado |
+| `login.cy.js`            | Login com sucesso, login com credenciais inválidas (alerta de erro) e fechamento manual do alerta        |
+| `lista-de-compras.cy.js` | Adicionar produto à lista de compras a partir da home e incrementar a quantidade do produto              |
+
+### API (`cypress/e2e/API`)
+
+| Spec                       | Cenários                                                                                                                                        |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `usuarios.cy.js`           | Cadastro de usuário (201 + persistência via GET), bloqueio de e-mail duplicado (400) e exclusão de usuário (200)                                |
+| `login.cy.js`              | Autenticação com sucesso (token Bearer) e autenticação com credenciais inválidas (401)                                                          |
+| `produtos-carrinhos.cy.js` | Bloqueio de criação de produto sem token (401), cadastro de produto como administrador (201) e criação de carrinho com validação do valor total |
+
+Todos os cenários criam sua própria massa de dados (via `@faker-js/faker`) e fazem a limpeza (teardown) via API ao final, para não deixar resíduo no ambiente público compartilhado do ServeRest.
 
 ## CI
 
-_Será adicionado no fechamento do projeto (GitHub Actions)._
+O workflow `.github/workflows/cypress.yml` roda no GitHub Actions a cada push/PR na branch `main`:
+
+- **lint**: ESLint + verificação de formatação (Prettier)
+- **e2e-gui**: suíte de testes de interface
+- **api**: suíte de testes de API
+
+Screenshots de falhas são anexadas automaticamente ao workflow run.
