@@ -8,6 +8,19 @@ export const mensagens = {
       'Token de acesso ausente, inválido, expirado ou usuário do token não existe mais',
     rotaParaAdministradores: 'Rota exclusiva para administradores',
   },
+  // Mensagens de campo obrigatório retornadas pela API (POST /usuarios com corpo incompleto).
+  validacaoApi: {
+    nomeObrigatorio: 'nome é obrigatório',
+    emailObrigatorio: 'email é obrigatório',
+    passwordObrigatorio: 'password é obrigatório',
+    administradorObrigatorio: 'administrador é obrigatório',
+  },
+  // Mesmas validações, como exibidas nos alertas da tela de cadastro (texto capitalizado).
+  validacaoGui: {
+    nomeObrigatorio: 'Nome é obrigatório',
+    emailObrigatorio: 'Email é obrigatório',
+    passwordObrigatorio: 'Password é obrigatório',
+  },
   sucesso: {
     cadastroRealizado: 'Cadastro realizado com sucesso',
     loginRealizado: 'Login realizado com sucesso',

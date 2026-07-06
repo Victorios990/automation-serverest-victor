@@ -1,4 +1,4 @@
-import { mensagens, UsuarioFactory, LoginActions } from '../../support/imports';
+import { mensagens, UsuarioFactory, LoginActions, HomeActions } from '../../support/imports';
 
 describe('Login', () => {
   beforeEach(function () {
@@ -50,5 +50,31 @@ describe('Login', () => {
 
     // Então o alerta deixa de ser exibido
     cy.get(this.mapaLogin.alertaErro).should('not.exist');
+  });
+
+  it('CT04 - Deve fazer logout e bloquear o acesso à home sem autenticação', function () {
+    const usuario = UsuarioFactory.gerarUsuario();
+
+    // Dado que estou autenticado na home
+    cy.criarUsuarioViaApi(usuario).then((resposta) => {
+      expect(resposta.status).to.eq(201);
+      cy.registrarUsuarioParaLimpeza({ ...usuario, id: resposta.body._id });
+
+      LoginActions.visitar();
+      LoginActions.login(this.mapaLogin, usuario.email, usuario.password);
+      cy.url().should('include', '/home');
+
+      // Quando faço logout
+      HomeActions.logout(this.mapaHome);
+
+      // Então volto para a tela de login
+      cy.url().should('include', '/login');
+      cy.get(this.mapaLogin.botaoEntrar).should('be.visible');
+
+      // E, ao tentar acessar a home diretamente, sou redirecionado de volta ao login
+      // (a sessão foi realmente encerrada, não é só uma troca de tela)
+      cy.visit('/home');
+      cy.url().should('include', '/login');
+    });
   });
 });

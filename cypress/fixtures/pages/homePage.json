@@ -7,5 +7,6 @@
   "campoPesquisa": "[data-testid=\"pesquisar\"]",
   "botaoPesquisar": "[data-testid=\"botaoPesquisar\"]",
   "cardProduto": ".card.col-3",
+  "tituloProduto": ".card-title",
   "botaoAdicionarNaLista": "[data-testid=\"adicionarNaLista\"]"
 }
