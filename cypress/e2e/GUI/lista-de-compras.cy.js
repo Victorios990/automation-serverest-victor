@@ -22,7 +22,7 @@ describe('Lista de compras (carrinho)', () => {
     });
   });
 
-  it('CT01 - Deve adicionar um produto à lista de compras a partir da home', function () {
+  it('CT01 - Deve adicionar um produto a lista de compras a partir da home', function () {
     // Dado que estou autenticado na home, com produtos disponíveis
     // Quando adiciono um produto à lista de compras
     HomeActions.adicionarProdutoALista(this.mapaHome, PRODUTO);

@@ -2,7 +2,7 @@ import { mensagens, UsuarioFactory } from '../../support/imports';
 
 const apiUrl = () => Cypress.env('apiUrl');
 
-describe('API - Usuários', () => {
+describe('API - Usuarios', () => {
   let idParaLimpar;
 
   afterEach(() => {
@@ -12,7 +12,7 @@ describe('API - Usuários', () => {
     }
   });
 
-  it('CT01 - Deve cadastrar um usuário com sucesso e persistir os dados corretamente', () => {
+  it('CT01 - Deve cadastrar um usuario com sucesso e persistir os dados corretamente', () => {
     const usuario = UsuarioFactory.gerarUsuario();
 
     cy.request({
@@ -39,7 +39,7 @@ describe('API - Usuários', () => {
     });
   });
 
-  it('CT02 - Não deve permitir o cadastro de um usuário com e-mail já utilizado', () => {
+  it('CT02 - Nao deve permitir o cadastro de um usuario com e-mail ja utilizado', () => {
     const usuario = UsuarioFactory.gerarUsuario();
 
     cy.request({
@@ -62,7 +62,7 @@ describe('API - Usuários', () => {
     });
   });
 
-  it('CT03 - Deve excluir um usuário com sucesso', () => {
+  it('CT03 - Deve excluir um usuario com sucesso', () => {
     const usuario = UsuarioFactory.gerarUsuario();
 
     cy.request({
@@ -89,7 +89,7 @@ describe('API - Usuários', () => {
     });
   });
 
-  it('CT04 - Deve validar os campos obrigatórios ao cadastrar com o corpo vazio', () => {
+  it('CT04 - Deve validar os campos obrigatorios ao cadastrar com o corpo vazio', () => {
     cy.request({
       method: 'POST',
       url: `${apiUrl()}/usuarios`,
@@ -106,7 +106,7 @@ describe('API - Usuários', () => {
     });
   });
 
-  it('CT05 - Deve listar usuários filtrando por email', () => {
+  it('CT05 - Deve listar usuarios filtrando por email', () => {
     const usuario = UsuarioFactory.gerarUsuario();
 
     cy.request({
@@ -124,7 +124,7 @@ describe('API - Usuários', () => {
     });
   });
 
-  it('CT06 - Deve alterar os dados de um usuário com sucesso', () => {
+  it('CT06 - Deve alterar os dados de um usuario com sucesso', () => {
     const usuario = UsuarioFactory.gerarUsuario();
 
     cy.request({

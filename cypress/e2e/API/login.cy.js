@@ -12,7 +12,7 @@ describe('API - Login', () => {
     }
   });
 
-  it('CT01 - Deve autenticar com sucesso e retornar um token de autorização válido', () => {
+  it('CT01 - Deve autenticar com sucesso e retornar um token de autorizacao valido', () => {
     const usuario = UsuarioFactory.gerarUsuario();
 
     cy.request({
@@ -34,7 +34,7 @@ describe('API - Login', () => {
     });
   });
 
-  it('CT02 - Não deve autenticar com e-mail e/ou senha inválidos', function () {
+  it('CT02 - Nao deve autenticar com e-mail e/ou senha invalidos', function () {
     cy.fixture('dados/credenciaisInvalidas').then((credenciais) => {
       cy.request({
         method: 'POST',
