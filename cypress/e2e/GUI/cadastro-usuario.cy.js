@@ -63,4 +63,41 @@ describe('Cadastro de Usuário', () => {
     );
     cy.url().should('include', '/cadastrarusuarios');
   });
+
+  it('CT04 - Deve cadastrar um usuário comum, sem marcar a opção de administrador', function () {
+    const usuario = UsuarioFactory.gerarUsuario({ administrador: 'false' });
+    cy.registrarUsuarioParaLimpeza(usuario);
+
+    // Dado que estou na tela de cadastro, com a opção de administrador desmarcada
+    CadastroActions.visitar();
+    cy.get(this.mapaCadastro.administradorCheckbox).should('not.be.checked');
+
+    // Quando preencho e submeto o formulário sem marcar "Cadastrar como administrador?"
+    CadastroActions.cadastrar(this.mapaCadastro, usuario);
+
+    // Então o cadastro é concluído com sucesso e o usuário é persistido como não-administrador
+    cy.url().should('include', '/home');
+    cy.buscarUsuarioPorEmailViaApi(usuario.email).then((busca) => {
+      expect(busca.body.usuarios[0].administrador).to.eq('false');
+    });
+  });
+
+  it('CT05 - Deve cadastrar um usuário administrador ao marcar a opção correspondente', function () {
+    const usuario = UsuarioFactory.gerarUsuario({ administrador: 'true' });
+    cy.registrarUsuarioParaLimpeza(usuario);
+
+    // Dado que estou na tela de cadastro
+    CadastroActions.visitar();
+
+    // Quando preencho o formulário e marco "Cadastrar como administrador?"
+    CadastroActions.preencherFormulario(this.mapaCadastro, usuario);
+    cy.get(this.mapaCadastro.administradorCheckbox).should('be.checked');
+    cy.get(this.mapaCadastro.botaoCadastrar).click();
+
+    // Então o cadastro é concluído com sucesso e o usuário é persistido como administrador
+    cy.url().should('include', '/home');
+    cy.buscarUsuarioPorEmailViaApi(usuario.email).then((busca) => {
+      expect(busca.body.usuarios[0].administrador).to.eq('true');
+    });
+  });
 });
