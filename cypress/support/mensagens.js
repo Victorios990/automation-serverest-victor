@@ -26,5 +26,10 @@ export const mensagens = {
     loginRealizado: 'Login realizado com sucesso',
     registroExcluido: 'Registro excluído com sucesso',
     registroAlterado: 'Registro alterado com sucesso',
+    // Mensagem específica do DELETE /carrinhos/cancelar-compra: além de excluir o
+    // carrinho, reabastece o estoque dos produtos - texto diferente do DELETE
+    // /carrinhos/concluir-compra, que só exclui (ver CT10 em produtos-carrinhos.cy.js).
+    carrinhoCanceladoComReabastecimento:
+      'Registro excluído com sucesso. Estoque dos produtos reabastecido',
   },
 };
