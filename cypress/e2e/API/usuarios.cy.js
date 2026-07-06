@@ -105,4 +105,51 @@ describe('API - Usuários', () => {
       });
     });
   });
+
+  it('CT05 - Deve listar usuários filtrando por email', () => {
+    const usuario = UsuarioFactory.gerarUsuario();
+
+    cy.request({
+      method: 'POST',
+      url: `${apiUrl()}/usuarios`,
+      body: usuario,
+    }).then((cadastro) => {
+      idParaLimpar = cadastro.body._id;
+
+      cy.request('GET', `${apiUrl()}/usuarios?email=${usuario.email}`).then((busca) => {
+        expect(busca.status).to.eq(200);
+        expect(busca.body.quantidade).to.eq(1);
+        expect(busca.body.usuarios[0]).to.include({ nome: usuario.nome, email: usuario.email });
+      });
+    });
+  });
+
+  it('CT06 - Deve alterar os dados de um usuário com sucesso', () => {
+    const usuario = UsuarioFactory.gerarUsuario();
+
+    cy.request({
+      method: 'POST',
+      url: `${apiUrl()}/usuarios`,
+      body: usuario,
+    }).then((cadastro) => {
+      idParaLimpar = cadastro.body._id;
+      const dadosAtualizados = UsuarioFactory.gerarUsuario();
+
+      cy.request({
+        method: 'PUT',
+        url: `${apiUrl()}/usuarios/${cadastro.body._id}`,
+        body: dadosAtualizados,
+      }).then((edicao) => {
+        expect(edicao.status).to.eq(200);
+        expect(edicao.body.message).to.eq(mensagens.sucesso.registroAlterado);
+
+        cy.request('GET', `${apiUrl()}/usuarios/${cadastro.body._id}`).then((consulta) => {
+          expect(consulta.body).to.include({
+            nome: dadosAtualizados.nome,
+            email: dadosAtualizados.email,
+          });
+        });
+      });
+    });
+  });
 });

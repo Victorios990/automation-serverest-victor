@@ -25,5 +25,6 @@ export const mensagens = {
     cadastroRealizado: 'Cadastro realizado com sucesso',
     loginRealizado: 'Login realizado com sucesso',
     registroExcluido: 'Registro excluído com sucesso',
+    registroAlterado: 'Registro alterado com sucesso',
   },
 };
