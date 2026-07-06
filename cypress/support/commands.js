@@ -36,3 +36,35 @@ Cypress.Commands.add('excluirUsuarioViaApi', (id) => {
     failOnStatusCode: false,
   });
 });
+
+// Fila de usuários criados durante os testes de GUI, para limpeza automática.
+// Cada spec apenas registra o usuário logo após criá-lo; o afterEach global
+// (cypress/support/e2e.js) esvazia a fila ao final de cada teste.
+let usuariosParaLimpar = [];
+
+Cypress.Commands.add('registrarUsuarioParaLimpeza', (usuario) => {
+  usuariosParaLimpar.push(usuario);
+});
+
+Cypress.Commands.add('limparUsuariosRegistrados', () => {
+  const usuarios = usuariosParaLimpar;
+  usuariosParaLimpar = [];
+
+  usuarios.forEach(({ id, email, password }) => {
+    if (id) {
+      cy.excluirUsuarioViaApi(id);
+      return;
+    }
+
+    if (!email || !password) return;
+
+    cy.autenticarViaApi({ email, password }).then((login) => {
+      if (login.status !== 200) return;
+
+      cy.buscarUsuarioPorEmailViaApi(email).then((busca) => {
+        const [usuario] = busca.body.usuarios;
+        if (usuario?._id) cy.excluirUsuarioViaApi(usuario._id);
+      });
+    });
+  });
+});

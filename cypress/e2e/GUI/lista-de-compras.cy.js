@@ -1,12 +1,8 @@
-import { UsuarioFactory } from '../../support/imports';
-import { LoginActions } from '../../support/actions/loginActions';
-import { HomeActions } from '../../support/actions/homeActions';
+import { UsuarioFactory, LoginActions, HomeActions } from '../../support/imports';
 
 const PRODUTO = 'Logitech MX Vertical';
 
 describe('Lista de compras (carrinho)', () => {
-  let usuarioParaLimpar;
-
   beforeEach(function () {
     cy.fixture('pages/loginPage').as('mapaLogin');
     cy.fixture('pages/homePage').as('mapaHome');
@@ -18,19 +14,12 @@ describe('Lista de compras (carrinho)', () => {
 
     cy.criarUsuarioViaApi(usuario).then((resposta) => {
       expect(resposta.status).to.eq(201);
-      usuarioParaLimpar = { ...usuario, id: resposta.body._id };
+      cy.registrarUsuarioParaLimpeza({ ...usuario, id: resposta.body._id });
 
       LoginActions.visitar();
       LoginActions.login(this.mapaLogin, usuario.email, usuario.password);
       cy.url().should('include', '/home');
     });
-  });
-
-  afterEach(function () {
-    if (usuarioParaLimpar?.id) {
-      cy.excluirUsuarioViaApi(usuarioParaLimpar.id);
-    }
-    usuarioParaLimpar = null;
   });
 
   it('CT01 - Deve adicionar um produto à lista de compras a partir da home', function () {

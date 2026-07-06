@@ -1,25 +1,9 @@
-import { mensagens, UsuarioFactory } from '../../support/imports';
-import { LoginActions } from '../../support/actions/loginActions';
+import { mensagens, UsuarioFactory, LoginActions } from '../../support/imports';
 
 describe('Login', () => {
-  let usuarioParaLimpar;
-
   beforeEach(function () {
     cy.fixture('pages/loginPage').as('mapaLogin');
     cy.fixture('pages/homePage').as('mapaHome');
-  });
-
-  afterEach(function () {
-    // Teardown: remove o usuário de teste criado via API para não acumular massa
-    // de dados no ambiente compartilhado do ServeRest.
-    if (!usuarioParaLimpar) return;
-
-    const { id } = usuarioParaLimpar;
-    usuarioParaLimpar = null;
-
-    if (id) {
-      cy.excluirUsuarioViaApi(id);
-    }
   });
 
   it('CT01 - Deve realizar login com sucesso utilizando um usuário previamente cadastrado', function () {
@@ -28,7 +12,7 @@ describe('Login', () => {
     // Dado que existe um usuário previamente cadastrado (setup via API, independente da UI)
     cy.criarUsuarioViaApi(usuario).then((resposta) => {
       expect(resposta.status).to.eq(201);
-      usuarioParaLimpar = { ...usuario, id: resposta.body._id };
+      cy.registrarUsuarioParaLimpeza({ ...usuario, id: resposta.body._id });
 
       // Quando faço login pela interface com as credenciais desse usuário
       LoginActions.visitar();
