@@ -1,0 +1,11 @@
+{
+  "navHome": "[data-testid=\"home\"]",
+  "navListaDeCompras": "[data-testid=\"lista-de-compras\"]",
+  "navCarrinho": "[data-testid=\"carrinho\"]",
+  "botaoLogout": "[data-testid=\"logout\"]",
+  "contadorCarrinho": "[data-testid=\"listaProdutos\"]",
+  "campoPesquisa": "[data-testid=\"pesquisar\"]",
+  "botaoPesquisar": "[data-testid=\"botaoPesquisar\"]",
+  "cardProduto": ".card.col-3",
+  "botaoAdicionarNaLista": "[data-testid=\"adicionarNaLista\"]"
+}
