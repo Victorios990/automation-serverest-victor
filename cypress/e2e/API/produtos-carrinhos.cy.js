@@ -316,7 +316,9 @@ describe('API - Produtos e Carrinhos', () => {
             headers: { Authorization: token },
           }).then((cancelamento) => {
             expect(cancelamento.status).to.eq(200);
-            expect(cancelamento.body.message).to.eq(mensagens.sucesso.registroExcluido);
+            expect(cancelamento.body.message).to.eq(
+              mensagens.sucesso.carrinhoCanceladoComReabastecimento,
+            );
 
             // Estoque deve voltar ao valor original (5), já que a compra foi cancelada
             cy.request(`${apiUrl()}/produtos/${produtoId}`).then((consulta) => {
