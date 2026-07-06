@@ -1,0 +1,8 @@
+{
+  "emailInput": "[data-testid=\"email\"]",
+  "senhaInput": "[data-testid=\"senha\"]",
+  "botaoEntrar": "[data-testid=\"entrar\"]",
+  "linkCadastrar": "[data-testid=\"cadastrar\"]",
+  "alertaErro": ".alert",
+  "botaoFecharAlerta": ".btn-close-error-alert"
+}
