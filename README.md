@@ -34,10 +34,10 @@ npm run allure:open      # abre o relatório no navegador
 
 > A suíte roda contra os ambientes públicos (`front.serverest.dev` e `serverest.dev`), não é necessário subir nada localmente.
 
-> **Importante:** instale o projeto fora de pastas sincronizadas por serviços de nuvem (iCloud
-> Drive, Dropbox, OneDrive). A sincronização em tempo real pode interferir na escrita de arquivos
-> durante o `npm install` e corromper pacotes (ex.: erros do tipo `Cannot find module` em
-> dependências do Cypress).
+> **Compatibilidade de versão do Node:** use Node **18 ou 20 (LTS)**. Em Node 24 o `npm install`
+> pode falhar ao instalar o binário do Cypress com um erro `Cannot find module './util'` em uma
+> dependência transitiva (`bluebird`), independente da pasta/localização usada — é incompatibilidade
+> de versão, não corrupção de arquivos. Se estiver usando `nvm`: `nvm install 20 && nvm use 20`.
 
 ## Arquitetura
 
