@@ -1,9 +1,10 @@
 # automation-serverest-victor
 
-Suíte de automação de testes construída com [Cypress](https://www.cypress.io/) para a aplicação pública [ServeRest](https://serverest.dev), cobrindo:
+Suíte de automação de testes construída com [Cypress](https://www.cypress.io/) para a aplicação pública [ServeRest](https://serverest.dev).
 
-- **3 cenários E2E (GUI)** contra `front.serverest.dev`
-- **3 cenários de API** contra `serverest.dev`
+Requisito do desafio: 3 cenários E2E (GUI) + 3 cenários de API. Entregue: 4 specs de GUI e 3 specs de
+API, totalizando 20 casos de teste (os 6 pedidos + cenários extras de validação, controle de acesso,
+busca e logout), cobrindo fluxos de sucesso, exceção e validação de campos.
 
 Projeto desenvolvido como desafio técnico de QA.
 
@@ -19,8 +20,8 @@ Projeto desenvolvido como desafio técnico de QA.
 
 ```bash
 npm install
-npx cypress open   # modo interativo
-npm run cy:run      # headless, toda a suíte
+npx cypress open     # modo interativo
+npm run cy:run       # headless, toda a suíte
 npm run cy:run:gui   # apenas os testes de interface
 npm run cy:run:api   # apenas os testes de API
 npm run lint         # checagem de estilo
@@ -63,19 +64,20 @@ cypress/
 
 ### E2E - GUI (`cypress/e2e/GUI`)
 
-| Spec                     | Cenários                                                                                                 |
-| ------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `cadastro-usuario.cy.js` | Cadastro de usuário com sucesso (redireciona para a home) e bloqueio de cadastro com e-mail já utilizado |
-| `login.cy.js`            | Login com sucesso, login com credenciais inválidas (alerta de erro) e fechamento manual do alerta        |
-| `lista-de-compras.cy.js` | Adicionar produto à lista de compras a partir da home e incrementar a quantidade do produto              |
+| Spec                     | Casos                                                                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `cadastro-usuario.cy.js` | CT01 sucesso (redireciona para a home) · CT02 e-mail já utilizado · CT03 campos obrigatórios (formulário vazio)            |
+| `login.cy.js`            | CT01 sucesso · CT02 credenciais inválidas (alerta) · CT03 fechar o alerta · CT04 logout (encerra sessão e bloqueia a home) |
+| `lista-de-compras.cy.js` | CT01 adicionar produto à lista · CT02 incrementar quantidade                                                               |
+| `busca-produtos.cy.js`   | CT01 buscar produto pelo nome e validar que a lista filtrada só contém itens correspondentes                               |
 
 ### API (`cypress/e2e/API`)
 
-| Spec                       | Cenários                                                                                                                                        |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `usuarios.cy.js`           | Cadastro de usuário (201 + persistência via GET), bloqueio de e-mail duplicado (400) e exclusão de usuário (200)                                |
-| `login.cy.js`              | Autenticação com sucesso (token Bearer) e autenticação com credenciais inválidas (401)                                                          |
-| `produtos-carrinhos.cy.js` | Bloqueio de criação de produto sem token (401), cadastro de produto como administrador (201) e criação de carrinho com validação do valor total |
+| Spec                       | Casos                                                                                                                                               |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `usuarios.cy.js`           | CT01 cadastro (201 + persistência via GET) · CT02 e-mail duplicado (400) · CT03 exclusão (200) · CT04 campos obrigatórios (400)                     |
+| `login.cy.js`              | CT01 autenticação com sucesso (token Bearer) · CT02 credenciais inválidas (401)                                                                     |
+| `produtos-carrinhos.cy.js` | CT01 sem token (401) · CT02 cadastro como admin (201) · CT03 criação de carrinho e cálculo do total · CT04 usuário não-admin com token válido (403) |
 
 Todos os cenários criam sua própria massa de dados (via `@faker-js/faker`) e fazem a limpeza (teardown) via API ao final, para não deixar resíduo no ambiente público compartilhado do ServeRest.
 
@@ -95,3 +97,28 @@ O workflow `.github/workflows/cypress.yml` roda no GitHub Actions a cada push/PR
 - **allure-report**: junta os resultados dos dois jobs acima e publica o relatório HTML do Allure como artefato do workflow
 
 Screenshots de falhas e o relatório Allure ficam disponíveis para download na aba _Actions_ do GitHub, no run correspondente.
+
+## Defeitos e observações encontradas durante a exploração
+
+- **Tela de carrinho (`/carrinho`) incompleta**: a página exibe apenas "Em construção aguarde" para
+  o cliente autenticado, mesmo com a API de carrinho (`POST/GET/DELETE /carrinhos`) e a lista de
+  compras (`/minhaListaDeProdutos`) funcionando normalmente. Isso está alinhado com o próprio
+  checklist de progresso do time no repositório do front (`ServeRest/front`), que marca "Listar
+  carrinho" e "Finalizar o carrinho" como pendentes. Por isso os cenários de GUI cobrem até a lista
+  de compras (o que de fato está implementado) e não a tela de carrinho em si — testar uma tela
+  "em construção" não agregaria valor.
+- **Contrato da API**: em todos os endpoints exercitados (usuários, login, produtos, carrinhos), os
+  status codes e mensagens de resposta bateram exatamente com o Swagger oficial (`serverest.dev`).
+  Nenhuma divergência encontrada.
+- **Fora do escopo verificado**: não foi feito teste exaustivo de segurança (XSS, SQL/NoSQL
+  injection, payloads malformados), valores-limite de preço/quantidade, nem testes de carga — não
+  fazem parte do escopo pedido (3 E2E + 3 API com Cypress) e, no caso de carga, a própria
+  documentação do ServeRest proíbe rodar contra o ambiente público.
+
+## Possíveis melhorias (fora do escopo deste desafio)
+
+- Paginação de usuários e produtos (o próprio backlog do front do ServeRest já sinaliza isso como pendente).
+- Validação de contrato via JSON Schema (ex.: `ajv`) para checar a resposta completa da API, não só campos pontuais.
+- Testes de acessibilidade (a11y) e cross-browser/mobile (BrowserStack).
+- Teste de carga com JMeter — só faria sentido rodando localmente (`npx serverest`/Docker), nunca contra `serverest.dev`.
+- Cenário de resiliência do front a falha de backend via `cy.intercept` (mock de erro 500) — avaliado e descartado por decisão consciente de manter todos os cenários como testes reais de ponta a ponta.
