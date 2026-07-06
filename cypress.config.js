@@ -1,4 +1,5 @@
 const { defineConfig } = require('cypress');
+const { allureCypress } = require('allure-cypress/reporter');
 
 module.exports = defineConfig({
   viewportWidth: 1280,
@@ -16,6 +17,10 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.cy.js',
     supportFile: 'cypress/support/e2e.js',
     setupNodeEvents(on, config) {
+      allureCypress(on, config, {
+        resultsDir: 'allure-results',
+      });
+
       return config;
     },
   },

@@ -37,6 +37,13 @@ jobs:
           name: cypress-screenshots-gui
           path: cypress/screenshots
           if-no-files-found: ignore
+      - name: Upload dos resultados do Allure (GUI)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-gui
+          path: allure-results
+          if-no-files-found: ignore
 
   api:
     name: Testes de API
@@ -53,4 +60,42 @@ jobs:
         with:
           name: cypress-screenshots-api
           path: cypress/screenshots
+          if-no-files-found: ignore
+      - name: Upload dos resultados do Allure (API)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-api
+          path: allure-results
+          if-no-files-found: ignore
+
+  allure-report:
+    name: Relatório Allure
+    runs-on: ubuntu-latest
+    needs: [e2e-gui, api]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Baixa resultados de GUI
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-gui
+          path: allure-results
+      - name: Baixa resultados de API
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-api
+          path: allure-results
+      - name: Gera o relatório HTML
+        run: npm run allure:generate
+      - name: Upload do relatório Allure
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
           if-no-files-found: ignore

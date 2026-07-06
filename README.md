@@ -11,6 +11,7 @@ Projeto desenvolvido como desafio técnico de QA.
 
 - [Cypress](https://www.cypress.io/) (JavaScript)
 - [@faker-js/faker](https://fakerjs.dev/) para massa de dados dinâmica
+- [Allure Report](https://allurereport.org/docs/cypress/) para relatório de execução
 - ESLint (`eslint-plugin-cypress`) + Prettier para padronização de código
 - GitHub Actions para execução da suíte em CI
 
@@ -23,6 +24,10 @@ npm run cy:run      # headless, toda a suíte
 npm run cy:run:gui   # apenas os testes de interface
 npm run cy:run:api   # apenas os testes de API
 npm run lint         # checagem de estilo
+
+# Relatório Allure (após rodar a suíte, gera allure-results/):
+npm run allure:generate  # gera o HTML em allure-report/
+npm run allure:open      # abre o relatório no navegador
 ```
 
 > A suíte roda contra os ambientes públicos (`front.serverest.dev` e `serverest.dev`), não é necessário subir nada localmente.
@@ -81,5 +86,6 @@ O workflow `.github/workflows/cypress.yml` roda no GitHub Actions a cada push/PR
 - **lint**: ESLint + verificação de formatação (Prettier)
 - **e2e-gui**: suíte de testes de interface
 - **api**: suíte de testes de API
+- **allure-report**: junta os resultados dos dois jobs acima e publica o relatório HTML do Allure como artefato do workflow
 
-Screenshots de falhas são anexadas automaticamente ao workflow run.
+Screenshots de falhas e o relatório Allure ficam disponíveis para download na aba _Actions_ do GitHub, no run correspondente.
