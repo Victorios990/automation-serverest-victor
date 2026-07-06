@@ -3,8 +3,9 @@
 Suíte de automação de testes construída com [Cypress](https://www.cypress.io/) para a aplicação pública [ServeRest](https://serverest.dev).
 
 Requisito do desafio: 3 cenários E2E (GUI) + 3 cenários de API. Entregue: 4 specs de GUI e 3 specs de
-API, totalizando 30 casos de teste, cobrindo fluxos de sucesso, exceção e validação de campos. A
-suíte de API cobre **100% das rotas documentadas no Swagger oficial** (`serverest.dev/swagger.json`).
+API, totalizando 32 casos de teste, cobrindo fluxos de sucesso, exceção, validação de campos e a
+diferença de navegação entre perfil comum e administrador. A suíte de API cobre **100% das rotas
+documentadas no Swagger oficial** (`serverest.dev/swagger.json`).
 
 Projeto desenvolvido como desafio técnico de QA.
 
@@ -46,7 +47,8 @@ cypress/
 │   ├── GUI/        # cenários E2E de interface
 │   └── API/        # cenários de API
 ├── fixtures/
-│   ├── pages/      # mapa de seletores por tela (data-testid do ServeRest)
+│   ├── pages/      # mapa de seletores por tela (data-testid do ServeRest, inclui
+│   │                 adminHomePage.json para o painel administrativo)
 │   └── dados/      # massa de dados estática (ex.: credenciais inválidas)
 ├── support/
 │   ├── actions/    # ações reaproveitáveis por tela (login, cadastro, home)
@@ -72,10 +74,10 @@ cypress/
 
 | Spec                     | Casos                                                                                                                                                                                                                     |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cadastro-usuario.cy.js` | CT01 sucesso (redireciona para a home) · CT02 e-mail já utilizado · CT03 campos obrigatórios (formulário vazio) · CT04 cadastro comum (checkbox de administrador desmarcado) · CT05 cadastro administrador (checkbox marcado) |
-| `login.cy.js`            | CT01 sucesso · CT02 credenciais inválidas (alerta) · CT03 fechar o alerta · CT04 logout (encerra sessão e bloqueia a home)                                                                                               |
+| `cadastro-usuario.cy.js` | CT01 sucesso (redireciona para a home) · CT02 e-mail já utilizado · CT03 campos obrigatórios (formulário vazio) · CT04 cadastro comum (checkbox de administrador desmarcado, redireciona para `/home`) · CT05 cadastro administrador (checkbox marcado, redireciona para `/admin/home`) |
+| `login.cy.js`            | **Autenticação:** CT01 sucesso · CT02 credenciais inválidas (alerta) · CT03 fechar o alerta · CT04 logout (encerra sessão e bloqueia a home). **Navegação pós-login por perfil:** CT05 usuário comum vê a navegação da loja (lista de compras, carrinho) e nenhum item de admin · CT06 administrador vê a navegação do painel (cadastrar/listar usuários e produtos, relatórios) e nenhum item de shopper |
 | `lista-de-compras.cy.js` | CT01 adicionar produto à lista · CT02 incrementar quantidade                                                                                                                                                             |
-| `busca-produtos.cy.js`   | CT01 buscar produto pelo nome (produto criado pelo próprio teste via API) e validar que a lista filtrada só contém itens correspondentes                                                                                |
+| `busca-produtos.cy.js`   | CT01 buscar produto pelo nome (produto cadastrado via API por um admin; a navegação e a busca são feitas por um usuário comum, já que administradores caem no painel `/admin/home`, sem busca) e validar que a lista filtrada só contém itens correspondentes |
 
 ### API (`cypress/e2e/API`)
 
@@ -145,6 +147,15 @@ Screenshots de falhas e o relatório Allure ficam disponíveis para download na 
   `busca-produtos.cy.js` buscava por um nome fixo ("Logitech") no catálogo público e compartilhado,
   causando falha intermitente quando esse produto não existia mais. Corrigido para o teste criar
   seu próprio produto via API antes de buscar por ele.
+- **Administrador tem uma navegação completamente separada (achado real, corrigido)**: ao logar,
+  contas com `administrador: true` são redirecionadas para `/admin/home` (painel próprio, com
+  Cadastrar/Listar Usuários, Cadastrar/Listar Produtos e Relatórios), e não para `/home` (a loja,
+  com busca e carrinho) - o painel de admin não tem busca de produtos. Isso derrubou dois testes
+  que assumiam o contrário: `busca-produtos.cy.js` (o produto agora é criado por um admin via API,
+  mas a navegação/busca é feita por um usuário comum) e a asserção de `cadastro-usuario.cy.js` CT05
+  (que checava `include('/home')`, um falso positivo, já que `/admin/home` também contém essa
+  substring - corrigido para `include('/admin/home')`). Também gerou dois cenários novos e
+  dedicados em `login.cy.js` (CT05/CT06) comparando a navegação dos dois perfis lado a lado.
 - **Contrato da API**: em todos os endpoints exercitados os status codes e mensagens de resposta
   bateram exatamente com o Swagger oficial (`serverest.dev`). Nenhuma divergência encontrada.
 - **Fora do escopo verificado**: não foi feito teste exaustivo de segurança (fuzzing, payloads
