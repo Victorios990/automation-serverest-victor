@@ -10,11 +10,15 @@
     "cy:run:api": "cypress run --spec \"cypress/e2e/API/**/*.cy.js\"",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "allure:generate": "allure generate ./allure-results --clean -o ./allure-report",
+    "allure:open": "allure open ./allure-report"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@faker-js/faker": "^10.5.0",
+    "allure": "^3.0.0",
+    "allure-cypress": "^3.10.2",
     "cypress": "^15.18.0",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
