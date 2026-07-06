@@ -1,0 +1,8 @@
+{
+  "botaoAdicionarCarrinho": "[data-testid=\"adicionar carrinho\"]",
+  "botaoLimparLista": "[data-testid=\"limparLista\"]",
+  "nomeProduto": "[data-testid=\"shopping-cart-product-name\"]",
+  "quantidadeProduto": "[data-testid=\"shopping-cart-product-quantity\"]",
+  "botaoAumentarQuantidade": "[data-testid=\"product-increase-quantity\"]",
+  "botaoDiminuirQuantidade": "[data-testid=\"product-decrease-quantity\"]"
+}
