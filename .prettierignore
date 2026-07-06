@@ -1,0 +1,10 @@
+node_modules
+package-lock.json
+cypress/videos
+cypress/screenshots
+cypress/downloads
+allure-results
+allure-report
+coverage
+evidencias
+docs
