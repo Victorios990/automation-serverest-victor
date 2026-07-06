@@ -40,4 +40,27 @@ describe('Cadastro de Usuário', () => {
     cy.get(this.mapaCadastro.alertaErro).should('contain.text', mensagens.erros.emailJaUtilizado);
     cy.url().should('include', '/cadastrarusuarios');
   });
+
+  it('CT03 - Deve validar os campos obrigatórios ao submeter o formulário vazio', function () {
+    // Dado que estou na tela de cadastro, com o formulário vazio
+    CadastroActions.visitar();
+
+    // Quando submeto sem preencher nenhum campo
+    cy.get(this.mapaCadastro.botaoCadastrar).click();
+
+    // Então a aplicação alerta sobre cada campo obrigatório e não avança da tela
+    cy.get(this.mapaCadastro.alertaErro).should(
+      'contain.text',
+      mensagens.validacaoGui.nomeObrigatorio,
+    );
+    cy.get(this.mapaCadastro.alertaErro).should(
+      'contain.text',
+      mensagens.validacaoGui.emailObrigatorio,
+    );
+    cy.get(this.mapaCadastro.alertaErro).should(
+      'contain.text',
+      mensagens.validacaoGui.passwordObrigatorio,
+    );
+    cy.url().should('include', '/cadastrarusuarios');
+  });
 });
