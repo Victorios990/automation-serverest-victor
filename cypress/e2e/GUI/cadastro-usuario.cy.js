@@ -75,8 +75,9 @@ describe('Cadastro de Usuário', () => {
     // Quando preencho e submeto o formulário sem marcar "Cadastrar como administrador?"
     CadastroActions.cadastrar(this.mapaCadastro, usuario);
 
-    // Então o cadastro é concluído com sucesso e o usuário é persistido como não-administrador
-    cy.url().should('include', '/home');
+    // Então o cadastro é concluído com sucesso, redireciona para a loja (não para o
+    // painel administrativo) e o usuário é persistido como não-administrador
+    cy.url().should('include', '/home').and('not.include', '/admin');
     cy.buscarUsuarioPorEmailViaApi(usuario.email).then((busca) => {
       expect(busca.body.usuarios[0].administrador).to.eq('false');
     });
@@ -94,8 +95,11 @@ describe('Cadastro de Usuário', () => {
     cy.get(this.mapaCadastro.administradorCheckbox).should('be.checked');
     cy.get(this.mapaCadastro.botaoCadastrar).click();
 
-    // Então o cadastro é concluído com sucesso e o usuário é persistido como administrador
-    cy.url().should('include', '/home');
+    // Então o cadastro é concluído com sucesso e o usuário é persistido como administrador.
+    // Contas administradoras são redirecionadas para /admin/home (painel administrativo),
+    // não para /home (a loja) - por isso a asserção verifica especificamente esse destino,
+    // em vez de um "include('/home')" que também daria match (falso positivo) em /admin/home.
+    cy.url().should('include', '/admin/home');
     cy.buscarUsuarioPorEmailViaApi(usuario.email).then((busca) => {
       expect(busca.body.usuarios[0].administrador).to.eq('true');
     });

@@ -10,30 +10,40 @@ describe('Busca de produtos', () => {
     cy.fixture('pages/loginPage').as('mapaLogin');
     cy.fixture('pages/homePage').as('mapaHome');
 
+    // Um administrador é necessário apenas para cadastrar o produto via API - contas
+    // administradoras são redirecionadas para /admin/home (painel administrativo) ao
+    // logar pela tela, não para /home (a loja com a busca), então a navegação pela
+    // GUI neste teste é feita com um usuário comum, como um shopper real faria.
     const admin = UsuarioFactory.gerarUsuario({ administrador: 'true' });
+    const usuarioComum = UsuarioFactory.gerarUsuario({ administrador: 'false' });
 
-    cy.criarUsuarioViaApi(admin).then((cadastro) => {
-      expect(cadastro.status).to.eq(201);
-      cy.registrarUsuarioParaLimpeza({ ...admin, id: cadastro.body._id });
+    cy.criarUsuarioViaApi(admin).then((cadastroAdmin) => {
+      expect(cadastroAdmin.status).to.eq(201);
+      cy.registrarUsuarioParaLimpeza({ ...admin, id: cadastroAdmin.body._id });
 
-      cy.autenticarViaApi({ email: admin.email, password: admin.password }).then((login) => {
-        // Cria o próprio produto a ser buscado, em vez de depender de um nome fixo
-        // ("Logitech") no catálogo público e compartilhado do ServeRest, que pode
-        // não existir mais dependendo de quem mexeu no ambiente por último.
-        const produto = ProdutoFactory.gerarProduto();
-        termoBusca = produto.nome;
+      cy.criarUsuarioViaApi(usuarioComum).then((cadastroComum) => {
+        expect(cadastroComum.status).to.eq(201);
+        cy.registrarUsuarioParaLimpeza({ ...usuarioComum, id: cadastroComum.body._id });
 
-        cy.request({
-          method: 'POST',
-          url: `${apiUrl()}/produtos`,
-          body: produto,
-          headers: { Authorization: login.body.authorization },
-        }).then((cadastroProduto) => {
-          produtoParaLimpar = { id: cadastroProduto.body._id, token: login.body.authorization };
+        cy.autenticarViaApi({ email: admin.email, password: admin.password }).then((login) => {
+          // Cria o próprio produto a ser buscado, em vez de depender de um nome fixo
+          // ("Logitech") no catálogo público e compartilhado do ServeRest, que pode
+          // não existir mais dependendo de quem mexeu no ambiente por último.
+          const produto = ProdutoFactory.gerarProduto();
+          termoBusca = produto.nome;
 
-          LoginActions.visitar();
-          LoginActions.login(this.mapaLogin, admin.email, admin.password);
-          cy.url().should('include', '/home');
+          cy.request({
+            method: 'POST',
+            url: `${apiUrl()}/produtos`,
+            body: produto,
+            headers: { Authorization: login.body.authorization },
+          }).then((cadastroProduto) => {
+            produtoParaLimpar = { id: cadastroProduto.body._id, token: login.body.authorization };
+
+            LoginActions.visitar();
+            LoginActions.login(this.mapaLogin, usuarioComum.email, usuarioComum.password);
+            cy.url().should('include', '/home').and('not.include', '/admin');
+          });
         });
       });
     });
