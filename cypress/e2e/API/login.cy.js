@@ -34,15 +34,17 @@ describe('API - Login', () => {
     });
   });
 
-  it('CT02 - Não deve autenticar com e-mail e/ou senha inválidos', () => {
-    cy.request({
-      method: 'POST',
-      url: `${apiUrl()}/login`,
-      body: { email: 'usuario.sem.cadastro.qa@teste.com', password: 'senhaErrada123' },
-      failOnStatusCode: false,
-    }).then((login) => {
-      expect(login.status).to.eq(401);
-      expect(login.body.message).to.eq(mensagens.erros.emailSenhaInvalidos);
+  it('CT02 - Não deve autenticar com e-mail e/ou senha inválidos', function () {
+    cy.fixture('dados/credenciaisInvalidas').then((credenciais) => {
+      cy.request({
+        method: 'POST',
+        url: `${apiUrl()}/login`,
+        body: credenciais,
+        failOnStatusCode: false,
+      }).then((login) => {
+        expect(login.status).to.eq(401);
+        expect(login.body.message).to.eq(mensagens.erros.emailSenhaInvalidos);
+      });
     });
   });
 });

@@ -4,6 +4,7 @@ describe('Login', () => {
   beforeEach(function () {
     cy.fixture('pages/loginPage').as('mapaLogin');
     cy.fixture('pages/homePage').as('mapaHome');
+    cy.fixture('dados/credenciaisInvalidas').as('credenciaisInvalidas');
   });
 
   it('CT01 - Deve realizar login com sucesso utilizando um usuário previamente cadastrado', function () {
@@ -29,7 +30,8 @@ describe('Login', () => {
     LoginActions.visitar();
 
     // Quando informo credenciais de um usuário que não existe
-    LoginActions.login(this.mapaLogin, 'usuario.inexistente.qa@teste.com', 'senhaErrada123');
+    const { email, password } = this.credenciaisInvalidas;
+    LoginActions.login(this.mapaLogin, email, password);
 
     // Então a aplicação exibe um alerta de erro e permanece na tela de login
     cy.get(this.mapaLogin.alertaErro).should('contain.text', mensagens.erros.emailSenhaInvalidos);
@@ -38,8 +40,9 @@ describe('Login', () => {
 
   it('CT03 - Deve permitir fechar o alerta de erro de login inválido', function () {
     // Dado que uma tentativa de login inválida gerou um alerta de erro
+    const { email, password } = this.credenciaisInvalidas;
     LoginActions.visitar();
-    LoginActions.login(this.mapaLogin, 'outro.inexistente.qa@teste.com', 'senhaErrada123');
+    LoginActions.login(this.mapaLogin, email, password);
     cy.get(this.mapaLogin.alertaErro).should('be.visible');
 
     // Quando fecho o alerta manualmente
