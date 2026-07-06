@@ -79,19 +79,19 @@ cypress/
 
 ### E2E - GUI (`cypress/e2e/GUI`)
 
-| Spec                     | Casos                                                                                                                                                                                                                     |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cadastro-usuario.cy.js` | CT01 sucesso (redireciona para a home) · CT02 e-mail já utilizado · CT03 campos obrigatórios (formulário vazio) · CT04 cadastro comum (checkbox de administrador desmarcado, redireciona para `/home`) · CT05 cadastro administrador (checkbox marcado, redireciona para `/admin/home`) |
+| Spec                     | Casos                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cadastro-usuario.cy.js` | CT01 sucesso (redireciona para a home) · CT02 e-mail já utilizado · CT03 campos obrigatórios (formulário vazio) · CT04 cadastro comum (checkbox de administrador desmarcado, redireciona para `/home`) · CT05 cadastro administrador (checkbox marcado, redireciona para `/admin/home`)                                                                                                                   |
 | `login.cy.js`            | **Autenticação:** CT01 sucesso · CT02 credenciais inválidas (alerta) · CT03 fechar o alerta · CT04 logout (encerra sessão e bloqueia a home). **Navegação pós-login por perfil:** CT05 usuário comum vê a navegação da loja (lista de compras, carrinho) e nenhum item de admin · CT06 administrador vê a navegação do painel (cadastrar/listar usuários e produtos, relatórios) e nenhum item de shopper |
-| `lista-de-compras.cy.js` | CT01 adicionar produto à lista · CT02 incrementar quantidade                                                                                                                                                             |
-| `busca-produtos.cy.js`   | CT01 buscar produto pelo nome (produto cadastrado via API por um admin; a navegação e a busca são feitas por um usuário comum, já que administradores caem no painel `/admin/home`, sem busca) e validar que a lista filtrada só contém itens correspondentes |
+| `lista-de-compras.cy.js` | CT01 adicionar produto à lista · CT02 incrementar quantidade                                                                                                                                                                                                                                                                                                                                              |
+| `busca-produtos.cy.js`   | CT01 buscar produto pelo nome (produto cadastrado via API por um admin; a navegação e a busca são feitas por um usuário comum, já que administradores caem no painel `/admin/home`, sem busca) e validar que a lista filtrada só contém itens correspondentes                                                                                                                                             |
 
 ### API (`cypress/e2e/API`)
 
-| Spec                       | Casos                                                                                                                                                                                                                                                                                                                                                     |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `usuarios.cy.js`           | CT01 cadastro (201 + persistência via GET) · CT02 e-mail duplicado (400) · CT03 exclusão (200) · CT04 campos obrigatórios (400) · CT05 listagem filtrada por e-mail (`GET /usuarios`) · CT06 edição de usuário (`PUT /usuarios/{_id}`)                                                                                                                 |
-| `login.cy.js`              | CT01 autenticação com sucesso (token Bearer) · CT02 credenciais inválidas (401)                                                                                                                                                                                                                                                                          |
+| Spec                       | Casos                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `usuarios.cy.js`           | CT01 cadastro (201 + persistência via GET) · CT02 e-mail duplicado (400) · CT03 exclusão (200) · CT04 campos obrigatórios (400) · CT05 listagem filtrada por e-mail (`GET /usuarios`) · CT06 edição de usuário (`PUT /usuarios/{_id}`)                                                                                                                                                                                                                                                                                                                                        |
+| `login.cy.js`              | CT01 autenticação com sucesso (token Bearer) · CT02 credenciais inválidas (401)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `produtos-carrinhos.cy.js` | CT01 sem token (401) · CT02 cadastro como admin (201) · CT03 criação de carrinho e cálculo do total · CT04 usuário não-admin com token válido (403) · CT05 listagem de produtos filtrada por nome (`GET /produtos`) · CT06 edição de produto (`PUT /produtos/{_id}`) · CT07 exclusão de produto (`DELETE /produtos/{_id}`) · CT08 listagem de carrinhos por usuário (`GET /carrinhos`) · CT09 cancelamento de compra com devolução de estoque (`DELETE /carrinhos/cancelar-compra`) · CT10 conclusão de compra sem devolução de estoque (`DELETE /carrinhos/concluir-compra`) |
 
 Todos os cenários criam sua própria massa de dados (via `@faker-js/faker`) e fazem a limpeza (teardown) via API ao final, para não deixar resíduo no ambiente público compartilhado do ServeRest.
@@ -104,17 +104,17 @@ Todos os cenários criam sua própria massa de dados (via `@faker-js/faker`) e f
 
 ### Cobertura das rotas do Swagger
 
-| Rota                                | Método(s)         | Coberta em                                          |
-| ------------------------------------ | ----------------- | ---------------------------------------------------- |
-| `/login`                             | POST              | `API/login.cy.js` CT01, CT02                          |
-| `/usuarios`                          | GET, POST         | `API/usuarios.cy.js` CT01, CT05                       |
-| `/usuarios/{_id}`                    | GET, PUT, DELETE  | `API/usuarios.cy.js` CT01, CT03, CT06                 |
-| `/produtos`                          | GET, POST         | `API/produtos-carrinhos.cy.js` CT02, CT05             |
-| `/produtos/{_id}`                    | GET, PUT, DELETE  | `API/produtos-carrinhos.cy.js` CT02, CT06, CT07       |
-| `/carrinhos`                         | GET, POST         | `API/produtos-carrinhos.cy.js` CT03, CT08             |
-| `/carrinhos/{_id}`                   | GET               | `API/produtos-carrinhos.cy.js` CT03                   |
-| `/carrinhos/cancelar-compra`         | DELETE            | `API/produtos-carrinhos.cy.js` CT09 (e teardown geral) |
-| `/carrinhos/concluir-compra`         | DELETE            | `API/produtos-carrinhos.cy.js` CT10                   |
+| Rota                         | Método(s)        | Coberta em                                             |
+| ---------------------------- | ---------------- | ------------------------------------------------------ |
+| `/login`                     | POST             | `API/login.cy.js` CT01, CT02                           |
+| `/usuarios`                  | GET, POST        | `API/usuarios.cy.js` CT01, CT05                        |
+| `/usuarios/{_id}`            | GET, PUT, DELETE | `API/usuarios.cy.js` CT01, CT03, CT06                  |
+| `/produtos`                  | GET, POST        | `API/produtos-carrinhos.cy.js` CT02, CT05              |
+| `/produtos/{_id}`            | GET, PUT, DELETE | `API/produtos-carrinhos.cy.js` CT02, CT06, CT07        |
+| `/carrinhos`                 | GET, POST        | `API/produtos-carrinhos.cy.js` CT03, CT08              |
+| `/carrinhos/{_id}`           | GET              | `API/produtos-carrinhos.cy.js` CT03                    |
+| `/carrinhos/cancelar-compra` | DELETE           | `API/produtos-carrinhos.cy.js` CT09 (e teardown geral) |
+| `/carrinhos/concluir-compra` | DELETE           | `API/produtos-carrinhos.cy.js` CT10                    |
 
 ## CI
 

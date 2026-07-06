@@ -36,10 +36,7 @@ describe('Login', () => {
       LoginActions.login(this.mapaLogin, email, password);
 
       // Então a aplicação exibe um alerta de erro e permanece na tela de login
-      cy.get(this.mapaLogin.alertaErro).should(
-        'contain.text',
-        mensagens.erros.emailSenhaInvalidos,
-      );
+      cy.get(this.mapaLogin.alertaErro).should('contain.text', mensagens.erros.emailSenhaInvalidos);
       cy.url().should('include', '/login');
     });
 
